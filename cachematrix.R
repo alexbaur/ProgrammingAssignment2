@@ -1,15 +1,36 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Inverting a matrix tends to use a lot of computing power and can thus slow
+## down processes. By saving the cache of a inverse matrix, we can manipulate
+## both the matrix and its inverse as an object instead of recomputing their
+## parameter.
 
-## Write a short comment describing this function
+## This function creates an object (matrix) from which we can cache its inverse.
+
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    inverse <- NULL
+    set <- function(y) {
+        x <<- y
+        inverse <<- NULL
+    }
+    get <- function() x
+    setinverse <- function(Tinverse) inverse <<- Tinverse
+    getinverse <- function() inverse
+    list(set = set, get = get,
+         setinverse = setinverse,
+         getinverse = getinverse)
 }
 
-
-## Write a short comment describing this function
+## This function creates the inverse of the matrix from the function above and then
+## caches it for later retrieval.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    inverse <- x$getinverse()
+    if(!is.null(inverse)) {
+        message("getting cached data")
+        return(inverse)
+    }
+    matrixdata <- x$get()
+    inverse <- solve(matrixdata, ...)
+    x$setinverse(inverse)
+    inverse
 }
